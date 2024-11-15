@@ -22,10 +22,6 @@ public class Booking {
         this.user = user;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
     public int getId() {
         return id;
     }
