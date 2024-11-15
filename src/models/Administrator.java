@@ -19,7 +19,7 @@ public class Administrator extends SuperUser{
     public void deleteAccount(List<User> users, List<Booking> bookings, String username) {
         List<Booking> bookingsToRemove = bookings.stream()
                 .filter(booking -> booking.getUser().getName().equals(username))
-                .collect(Collectors.toList());
+                .toList();
 
         for (Booking booking : bookingsToRemove) {
             booking.getRoom().setReservation(false);
