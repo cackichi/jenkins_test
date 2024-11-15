@@ -37,17 +37,6 @@ public class Main {
                 }
                 System.out.println("Пользователь с именем " + name + " является Администратором");
                 System.out.println();
-
-                try {
-                    Method method = clazz.getMethod("viewAllBookings",List.class);
-                    method.invoke(bookings);
-                } catch (NoSuchMethodException e) {
-                    throw new RuntimeException(e);
-                } catch (InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
             };
         }
 
