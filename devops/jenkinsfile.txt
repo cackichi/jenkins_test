@@ -1,0 +1,46 @@
+pipeline {
+    agent {
+        node {
+        label 'TestNode'
+        }
+    }
+
+    environment {
+            JAVA_HOME = tool 'jdk17'
+    }
+
+    stages  {
+        stage ('Checkout') {
+            steps {
+                bat 'del /F /S /Q *.*'
+
+                bat 'for /d %%x in (.\\*) do @rd /s /q %%x'
+
+                echo 'step Git Checkout'
+
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+          steps {
+            bat 'ant package'
+          }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'ant test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    def gitCommit = env.BRANCH_NAME == 'master' ? 'deploy' : ''
+                    bat "git checkout $gitCommit && ant deploy"
+                }
+            }
+        }
+    }
+}

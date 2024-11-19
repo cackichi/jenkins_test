@@ -1,11 +1,84 @@
 <?xml version="1.0"?>
-<project name="my-java-project" default="build">
+<project name="hotel-management-system" default="test">
 
-    <target name="build">
-        <javac srcdir="src" destdir="bin"/>
-        <copy todir="bin" includeemptydirs="true">
-            <fileset dir="." includes="**/*.class"/>
-        </copy>
+    <property name="src.dir" value="src"/>
+    <property name="bin.dir" value="target/classes"/>
+    <property name="dist.dir" value="target/dist"/>
+    <property name="deploy.dir" value="target/deploy"/>
+    <property name="dist.jar" value="dist.jar"/>
+
+    <target name="create-jar" depends="compile" description="Create JAR file">
+        <jar destfile="${dist.jar}" basedir="${bin.dir}">
+            <fileset dir="${src.dir}" includes="**/*.class"/>
+            <manifest>
+                <attribute name="Main-Class" value="models.Main"/>
+            </manifest>
+        </jar>
     </target>
+
+    <target name="package" depends="clean, compile, create-jar" description="Build the application">
+        <mkdir dir="${dist.dir}"/>
+        <copy file="${bin.dir}/Main.class" todir="${dist.dir}"/>
+        <copy file="${src.dir}/config.properties" todir="${dist.dir}"/>
+    </target>
+
+
+    <path id="classpath">
+        <pathelement location="${bin.dir}"/>
+    </path>
+
+    <target name="clean" description="Clean output directories">
+        <delete dir="${bin.dir}"/>
+    </target>
+
+    <target name="compile" depends="clean" description="Compile the source">
+        <javac srcdir="${src.dir}" destdir="${bin.dir}">
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <target name="test" depends="compile" description="Run tests">
+        <junit printsummary="yes" haltonfailure="no">
+            <classpath>
+                <pathelement location="${bin.dir}"/>
+            </classpath>
+            <formatter type="plain"/>
+            <formatter type="xml" />
+            <batchtest fork="yes" failureProperty="tests.failed">
+                <fileset dir="${src.dir}">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="deploy" depends="test, package" description="Deploy application">
+        <echo>Начало процесса деплоя...</echo>
+
+        <!-- Подготовка окружения -->
+        <mkdir dir="${deploy.dir}"/>
+
+        <!-- Копирование бинарных файлов -->
+        <copy todir="${deploy.dir}">
+            <fileset dir="${dist.dir}">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+
+        <!-- Создание конфигурационного файла -->
+        <property name="config.file" location="${src.dir}/config.properties"/>
+
+        <!-- Копирование конфигурационного файла -->
+        <copy file="${config.file}" tofile="${deploy.dir}/config.properties"/>
+
+        <!-- Запуск скрипта деплоя -->
+        <exec dir="${deploy.dir}" executable="cmd">
+            <arg value="/c"/>
+            <arg value="deploy.bat"/>
+        </exec>
+
+        <echo>Деплой завершен успешно.</echo>
+    </target>
+
 
 </project>
