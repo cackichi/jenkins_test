@@ -12,7 +12,7 @@ public class Main {
         List<Room> rooms = new ArrayList<>();
         List<Booking> bookings = new ArrayList<>();
 
-        Administrator admin = new Administrator("Admin");
+        Administrator admin = new Administrator("Adminchik");
         SuperUser superUser = new SuperUser("SuperUser");
         User user1 = new User("User1");
         User user2 = new User("User2");

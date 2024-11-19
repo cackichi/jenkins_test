@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<project name="my-java-project" default="build">
+
+    <target name="build">
+        <javac srcdir="src" destdir="bin"/>
+        <copy todir="bin" includeemptydirs="true">
+            <fileset dir="." includes="**/*.class"/>
+        </copy>
+    </target>
+
+</project>
