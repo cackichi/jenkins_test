@@ -5,4 +5,4 @@ set PATH=%JAVA_HOME%\bin;%PATH% 255252
 
 start java -jar dist/your-app.jar
 
-echo Деплой завершен успешно.
+echo Деплой завершен успешно lflflflflfl.
